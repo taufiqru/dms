@@ -24,7 +24,6 @@
 <link rel="stylesheet" href="<?=base_url();?>theme/dist/css/AdminLTE.min.css"> 
 <html>
   <body>
-  
      <div id="fine-uploader-manual-trigger"></div>
   </body>
 </html>
@@ -64,6 +63,7 @@
                       <button type="button" class="qq-btn qq-upload-retry-selector qq-upload-retry">Retry</button>
                       <button type="button" class="qq-btn qq-upload-delete-selector qq-upload-delete">Delete</button>
                       <span role="status" class="qq-upload-status-text-selector qq-upload-status-text"></span>
+                      <span class="qq-upload-status-text-selector qq-upload-status-text" id="errorMsg"></span>
                   </li>
               </ul>
 
@@ -91,7 +91,7 @@
                   </div>
               </dialog>
           </div>
-        </script>
+</script>     
 <script>
         var manualUploader = new qq.FineUploader({
             element: document.getElementById('fine-uploader-manual-trigger'),
@@ -105,8 +105,13 @@
                     notAvailablePath: '<?=base_url();?>fine-uploader/placeholders/not_available-generic.png'
                 }
             },
-            autoUpload: false,
-            //debug: true
+            callbacks:{
+              onError : function(id, name, errorReason, xhrOrXdr) {
+                        document.getElementById("errorMsg").innerHTML= qq.format("Error on file number {} - {}.  Reason: {}", id, name, errorReason);
+                        }
+            },
+            autoUpload: true,
+            debug: true
         });
 
         qq(document.getElementById("trigger-upload")).attach("click", function() {

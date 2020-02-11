@@ -108,21 +108,21 @@ class qqFileUploader {
         
         
         if (!is_writable($uploadDirectory)){
-            return array('error' => "Server error. Upload directory isn't writable.");
+            return array('success'=>false,'error' => "Server error. Upload directory isn't writable.");
         }
         
         if (!$this->file){
-            return array('error' => 'No files were uploaded.');
+            return array('success'=>false,'error' => 'No files were uploaded.');
         }
         
         $size = $this->file->getSize();
         
         if ($size == 0) {
-            return array('error' => 'File is empty');
+            return array('success'=>false,'error' => 'File is empty');
         }
         
         if ($size > $this->sizeLimit) {
-            return array('error' => 'File is too large');
+            return array('success'=>false,'error' => 'File is too large');
         }
         
         $pathinfo = pathinfo($this->file->getName());
@@ -133,7 +133,7 @@ class qqFileUploader {
         
         if($this->allowedExtensions && !in_array(strtolower($ext), $this->allowedExtensions)){
             $these = implode(', ', $this->allowedExtensions);
-            return array('error' => 'File has an invalid extension, it should be one of '. $these . '.');
+            return array('success'=>false,'error' => 'File has an invalid extension, it should be one of '. $these . '.');
         }
         
         if(!$replaceOldFile){
@@ -147,7 +147,7 @@ class qqFileUploader {
             //return array('success'=>true);
             return array('success'=>true, 'filename'=>$filename . '.' . $ext, 'filezise'=>$size);
         } else {
-            return array('error'=> 'Could not save uploaded file.' .
+            return array('success'=>false,'error'=> 'Could not save uploaded file.' .
                 'The upload was cancelled, or server error encountered');
         }
         

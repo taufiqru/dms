@@ -20,34 +20,37 @@
         <li class="treeview">
           <a href="<?=base_url()?>index.php/dokumen"><i class="fa fa-home"></i> <span>Home</span></a>       
         </li>
-        <li class="treeview">
+        <!-- <li class="treeview">
           <a href="<?=base_url()?>index.php/dokumen"><i class="fa fa-file"></i> <span>Repository</span>            
           </a>                 
-        </li>
-        <li class="treeview">
-          <a href="#">
+        </li> -->
+        <?php if($this->session->userdata('level')=="Admin"){?>
+          <li class="treeview">
+            <a href="#">
 
-            <i class="fa fa-gears"></i><span>Pengaturan</span>
-          </a>
-          <ul class="treeview-menu">
-            <li>
-              <a href="<?=base_url()?>setting">
-                <i class="fa fa-circle-o"></i>  
-                <span>Level Akses</span>
-              </a>
-            </li>
-            <li>
-              <a href="<?=base_url()?>setting/folder">
-                <i class="fa fa-circle-o"></i>
-                <span>Folder & Hak Akses</span>
-              </a>
-            </li>
-          </ul>
-        </li>
-        <li class="treeview">
-          <a href="<?=base_url()?>akun"><i class="fa  fa-users"></i> <span>Akun</span>           
-          </a>          
-        </li>        
+              <i class="fa fa-gears"></i><span>Pengaturan</span>
+            </a>
+            <ul class="treeview-menu">
+              <li>
+                <a href="<?=base_url()?>setting">
+                  <i class="fa fa-circle-o"></i>  
+                  <span>Level Akses</span>
+                </a>
+              </li>
+              <li>
+                <a href="<?=base_url()?>setting/folder">
+                  <i class="fa fa-circle-o"></i>
+                  <span>Folder & Hak Akses</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="treeview">
+            <a href="<?=base_url()?>akun"><i class="fa  fa-users"></i> <span>Akun</span>           
+            </a>          
+          </li>        
+        <?php }?>
+        
         <li class="treeview">
               <a href="<?=base_url();?>index.php/login/logout"><i class="fa fa-power-off"></i> <span>Logout</span></a>          
         </li>

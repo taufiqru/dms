@@ -52,11 +52,7 @@ class Akun extends CI_Controller{
 		$this->load->view('base/wrapper-open');
 		$this->load->view('base/nav-header');
 		$level=$this->session->userdata('level');
-		if($level=="Pegawai"){
-			$this->load->view('base/nav-sidebar_user');	
-		}else{
-			$this->load->view('base/nav-sidebar_admin');
-		}			
+		$this->load->view('base/nav-sidebar_admin');
 		$this->load->view('layout/table',$output);		
 		$this->load->view('base/footer');
 		$this->load->view('base/control-sidebar');	

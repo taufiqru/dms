@@ -43,11 +43,15 @@
             Loading...
           </div>     
           <div class="box-body" id="repository">
+            
+            <?php if($this->session->userdata('level')==="Admin"){?>
             <a href="#" class="btn bg-blue" id="tambahFile">
               <i class="fa fa-plus-circle"></i>
               Tambah Dokumen
             </a>
             <br><br>
+            <?php }?>
+            
             <table id="dokumen" class="display" cellspacing="0" width="100%">
               <thead>
                 <tr>
@@ -108,7 +112,8 @@
   }
 
   $('document').ready( function (){
-    $('#ajax').jstree({
+
+  $('#ajax').jstree({
     'core' : {
       'data' : {
         "url" : function(node){
@@ -122,24 +127,31 @@
       'force_text' : true,
       'check_callback' : true,
     },
-    'plugins': ["wholerow","contextmenu"]
+    'plugins': ["state","wholerow","contextmenu"]
   })
+    .on('state_ready.jstree',function(){
+      var sel = $('#ajax').jstree().get_selected(true)[0];
+      if(sel==null){
+        $('#ajax').jstree('select_node', 'ul > li:first');  
+      }
+      
+    })
     .on('create_node.jstree',function(e,data){
       $url="<?=base_url()?>index.php/dokumen/addfolder";
-      $.getJSON($url,{'id':data.node.id,'id_parent':data.node.parent,'position':data.position,'nama':data.node.text})
+      $.getJSON($url,{'id':'','id_parent':data.node.parent,'position':data.position,'nama':data.node.text})
         .done(function(d){
-          console.log('sukses');
+          //console.log('sukses');
            data.instance.set_id(data.node, d.id);
         })
         .fail(function(){
-          console.log('fail');
+          //console.log('fail');
           data.instance.refresh();
         });     
     })
     .on('rename_node.jstree', function (e, data) {
       $url="<?=base_url()?>index.php/dokumen/renamefolder";
             $.get($url, { 'id' : data.node.id, 'nama' : data.text },function(data){
-                console.log(data);
+                //console.log(data);
               })
               .fail(function () {
                 console.log('fail');
@@ -168,6 +180,7 @@
             }                  
     })
     .on('changed.jstree',function(e,data){
+      //console.log(data);
       //console.log(data.selected[0]);
       if(data && data.selected && data.selected.length){
         $("#repository").fadeIn();      
@@ -256,7 +269,14 @@
 
     $('#dokumen tbody').on('click','#download',function(){
       var data=table.row($(this).parents('tr')).data();
-      window.open('<?=base_url()?>uploads/'+data.f.file, '_blank');
+     // window.open('<?=base_url()?>uploads/'+data.f.file, '_blank');
+     // var url = '<?=base_url()?>dokumen/setwatermark';
+     // $.get(url,{'file':data.f.file}).done(function(data){
+
+     // });
+     var nama = "<?=$this->session->userdata('nama')?>";
+     var np = "<?=$this->session->userdata('no_pegawai')?>";
+     window.open('<?=base_url()?>WatermarkPDF/Watermark.php?file='+data.f.file+'&nama='+nama+'&np='+np, '_blank');
       console.log(data.f.file);
     });
 

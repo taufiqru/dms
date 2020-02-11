@@ -18,16 +18,36 @@ class Dokumen extends CI_Controller{
 		return $this->model_dokumen->getFolder($level);
 	}
 
+	function setWatermark(){
+		$file = $_GET['file'];
+		$urlSource = base_url().'uploads/'.$file;
+		$this->load->library('WatermarkPDF/WatermarkPDF');
+		$this->toPDF($urlSource);
+	}
+
+	function toPDF($filepath){
+		$pdfFile = $filepath;
+		print($pdfFile);
+		$watermarkText = "CONFIDENTIAL";
+		$pdf = new WatermarkPDF($pdfFile, $watermarkText);
+		$pdf->AddPage();
+		$pdf->SetFont('Arial', '', 12);
+
+		if($pdf->numPages>1) {
+		    for($i=2;$i<=$pdf->numPages;$i++) {
+		        $pdf->_tplIdx = $pdf->importPage($i);
+		        $pdf->AddPage();
+		    }
+		}
+
+		$pdf->Output();
+	}
+
 	function show($page,$output=null){
 		$this->load->view('base/header');		
 		$this->load->view('base/wrapper-open');
 		$this->load->view('base/nav-header');
-		$level=$this->session->userdata('level');
-		if($level=="Pegawai"){
-			$this->load->view('base/nav-sidebar_user');	
-		}else{
-			$this->load->view('base/nav-sidebar_admin');
-		}			
+		$this->load->view('base/nav-sidebar_admin');
 		$this->load->view($page,$output);		
 		$this->load->view('base/footer');
 		$this->load->view('base/control-sidebar');	
@@ -74,12 +94,14 @@ class Dokumen extends CI_Controller{
 			'nama'=>$nama
 			);
 		$exec=$this->db->insert('folder',$input);
+		$id = $this->db->insert_id();
 
 		if($exec){
 			$status="success";
 		}else{
 			$status="fail";
 		}
+
 		$result=array('id'=>$id, 'nama'=>$nama, 'status'=>$status);
 		header('Content-Type: application/json; charset=utf-8');
     	echo json_encode($result);
@@ -112,7 +134,9 @@ class Dokumen extends CI_Controller{
 		// $query=$this->db->get('folder')->result();
 		
 		$output=array();
+		
 		foreach($query as $row){
+			
 			unset($temp);
 			$temp=array();
 			$temp['id']=$row->id_folder;
@@ -185,16 +209,20 @@ class Dokumen extends CI_Controller{
 	}
 
 	function uploaderview(){
+
 		$this->load->view('layout/uploader');
 	}
 
 	function uploaddokumen(){
 		$this->load->library('qquploadedfilexhr');
-		$allowedExtensions=array('png','jpeg','jpg','pdf','doc','docx');
-		$sizeLimit=2*1024*1024;
+		//$allowedExtensions=array('png','jpeg','jpg','pdf','doc','docx');
+		$allowedExtensions=array('pdf');
+		$sizeLimit=80*1024*1024;
 		$uploader=new qqFileUploader($allowedExtensions,$sizeLimit);
-		$result=$uploader->handleUpload('uploads/');
-		if($result){
+		$url = 'uploads/';
+		$result=$uploader->handleUpload($url);
+		//echo $result;
+		if($result['success']){
 			$data=array(
 				'file'=>$_POST['qqfilename'],
 				'folder'=>$this->uri->segment(3),

@@ -58,7 +58,7 @@
 
                 <p>
                   <?=$this->session->userdata('nama')?>
-                  <small>NP. <?=$this->session->userdata('NIP')?></small>
+                  <small>NP. <?=$this->session->userdata('no_pegawai')?></small>
                 </p>
               </li>
               <!-- Menu Body -->
@@ -66,7 +66,7 @@
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="<?=base_url();?>index.php/peserta/index/read/<?=$this->session->userdata('id_pegawai');?>" class="btn btn-default btn-flat">Profile</a>
+                  <a href="#" class="btn btn-default btn-flat">Profile</a>
                 </div>
                 <div class="pull-right">
                   <a href="<?=base_url();?>index.php/login/logout" class="btn btn-default btn-flat">Sign out</a>

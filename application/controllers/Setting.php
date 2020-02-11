@@ -53,10 +53,10 @@ class Setting extends CI_Controller{
 		$this->load->model('Model_dokumen');
 		$namaFolder = $this->input->post('nama');
 		$aksiFolder = $this->input->post('aksi');
-		$idFolder = $this->input->post('id');
+		$idFolder = "";
 		
 		if($aksiFolder=="Tambah"){
-			$id = $this->Model_dokumen->getMaxIdFolder();
+			$id = $idFolder;
 			$val = array(
 					'id_folder' => $id,
 					'parent' => "#",
@@ -104,11 +104,7 @@ class Setting extends CI_Controller{
 		$this->load->view('base/wrapper-open');
 		$this->load->view('base/nav-header');
 		$level=$this->session->userdata('level');
-		if($level=="Pegawai"){
-			$this->load->view('base/nav-sidebar_user');	
-		}else{
-			$this->load->view('base/nav-sidebar_admin');
-		}			
+		$this->load->view('base/nav-sidebar_admin');
 		$this->load->view($page,$output);		
 		$this->load->view('base/footer');
 		$this->load->view('base/control-sidebar');			
