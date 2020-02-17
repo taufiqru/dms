@@ -65,8 +65,17 @@
     margin-right: 12px;
     display: inline;
 }
-.qq-upload-file {
+.qq-upload-file{
+    width : 400px;
+    height : 18px;
+    font-size : 12px;
 }
+
+.qq-thumbnail-selector{
+    height:30px;
+}
+
+
 .qq-upload-spinner {
     display: inline-block;
     background: url("loading.gif");
@@ -99,6 +108,9 @@
     font-size: 12px;
     font-weight: normal;
 }
+
+
+
 .qq-upload-failed-text {
     display: none;
     font-style: italic;

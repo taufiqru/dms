@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="<?=base_url()?>css/default/style.css" />
-<link rel="stylesheet" href="<?=base_url()?>theme/plugins/datatables/jquery.dataTables.min.css" /> 
+<link rel="stylesheet" href="<?=base_url()?>theme/plugins/datatables/dataTables.bootstrap.css" /> 
 <link rel="stylesheet" href="<?=base_url()?>theme/plugins/datatables/jquery.dataTables_themeroller.css" /> 
 
   <!-- Content Wrapper. Contains page content -->
@@ -18,7 +18,7 @@
     <section class="content" >
     <div class="row">
       <div class="col-md-3">
-        <div class="box"  style="overflow-y: hidden;"  >      
+        <div class="box box-warning"  style="overflow-y: hidden;"  >      
           <div class="box-body">
             <div id="ajax" class="demo"></div>
           </div>
@@ -26,19 +26,7 @@
         </div>
       </div>
       <div class="col-md-9" id="mainbox" >
-        <!-- alert fail -->
-        <div id="alertfail" class="alert alert-danger alert-dismissible" style="display:none">
-          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-          <h4><i class="icon fa fa-info"></i> Gagal!</h4>
-          <span id="pesanerror">Terjadi Kesalahan Saat Menghapus Data.</span>
-        </div>
-        <!-- alert success -->
-        <div id="alertsuccess" class="alert alert-success alert-dismissible" style="display:none">
-          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-          <h4><i class="icon fa fa-info"></i> Sukses!</h4>
-          <span id="namafile"></span> Berhasil Dihapus.
-        </div>
-        <div class="box"> 
+        <div class="box box-warning"> 
           <div class="box-header with-border" id="alamat">
             Loading...
           </div>     
@@ -52,13 +40,13 @@
             <br><br>
             <?php }?>
             
-            <table id="dokumen" class="display" cellspacing="0" width="100%">
+            <table id="dokumen" class="table table-bordered table-striped" cellspacing="0" width="100%">
               <thead>
                 <tr>
                   <th>Id</th>
                   <th>File</th>
                   <th>Folder</th>
-                  <th>Aksi</th>                                  
+                  <th style="width:150px">Aksi</th>                                  
                 </tr>
               </thead>
               <tfoot>
@@ -87,6 +75,10 @@
 <script src="<?=base_url()?>js/jstree.wholerow.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="<?=base_url()?>theme/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="<?=base_url()?>theme/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="<?=base_url()?>js/aes-json-format.js"></script>
+<script src="<?=base_url()?>js/aes.js"></script>
+
 <script>
   // ajax demo
   var active_id=1;
@@ -127,8 +119,16 @@
       'force_text' : true,
       'check_callback' : true,
     },
-    'plugins': ["state","wholerow","contextmenu"]
-  })
+    'plugins': ["state","wholerow","contextmenu"],
+    "contextmenu": {
+    "items": function(node) {
+             var defaultItems = $.jstree.defaults.contextmenu.items();
+             //console.log("default items : "+JSON.stringify(defaultItems));
+             delete defaultItems.ccp.submenu.copy;
+             return defaultItems;
+          }
+      },
+    })
     .on('state_ready.jstree',function(){
       var sel = $('#ajax').jstree().get_selected(true)[0];
       if(sel==null){
@@ -214,15 +214,19 @@
         })
     });
     
+    <?php if($this->session->userdata('level')!="Admin"){ ?>
+      $('#ajax').off("contextmenu.jstree", ".jstree-anchor");
+    <?php }?>
+
     $("#tambahFile").on('click',function(){
       var uploader_dialog= $("<div></div>")
-      .html('<iframe style="border: 0px; " src="<?=base_url()?>index.php/dokumen/uploaderView?id='+getActive_id()+'" width="100%" height="100%"></iframe>')
+      .html('<iframe style="border: 0px; " src="<?=base_url()?>index.php/dokumen/uploaderView?id='+getActive_id()+'" width="100%" height="90%"></iframe>')
       .dialog({
         autoOpen:false,
         title: "Upload Dokumen : " +getActive_node() ,
         modal:true,
         width:800,
-        height:500,
+        height:600,
         show:{
           effect:"fade",
           duration:500
@@ -230,6 +234,12 @@
         hide:{
           effect:"fade",
           duration:500
+        },
+        create: function(event, ui) {
+          $("#tambahFile").parent('.ui-dialog').css('zIndex', 0);
+        },
+        open: function (event, ui) {
+          $("#tambahFile").css('overflow-y', 'hidden'); 
         },
         buttons: {
           Tutup: function() {
@@ -262,12 +272,22 @@
             {
              "data": null,
              "searchable": false,
-             "defaultContent": "<button id='download' class='btn bg-teal '>Download</button> <button id='hapus' class='btn bg-red'>Hapus</button>"
+             "render": function(data,type,row){
+                var admin = "<button id='lihat' class='btn bg-teal '>Lihat</button> <button id='hapus' class='btn bg-red'>Hapus</button>";
+                var user = "<button id='lihat' class='btn bg-teal '>Lihat</button>";
+                <?php if($this->session->userdata('level')=='Admin'){ ?>
+                  return admin;
+                <?php }else{?>  
+                  return user;
+                <?php }?>  
+             }
+
+             // "defaultContent": "<button id='download' class='btn bg-teal '>Download</button> <button id='hapus' class='btn bg-red'>Hapus</button>"
             }
           ] 
     } ); 
 
-    $('#dokumen tbody').on('click','#download',function(){
+    $('#dokumen tbody').on('click','#lihat',function(){
       var data=table.row($(this).parents('tr')).data();
      // window.open('<?=base_url()?>uploads/'+data.f.file, '_blank');
      // var url = '<?=base_url()?>dokumen/setwatermark';
@@ -276,8 +296,15 @@
      // });
      var nama = "<?=$this->session->userdata('nama')?>";
      var np = "<?=$this->session->userdata('no_pegawai')?>";
-     window.open('<?=base_url()?>WatermarkPDF/Watermark.php?file='+data.f.file+'&nama='+nama+'&np='+np, '_blank');
-      console.log(data.f.file);
+     var url = 'WatermarkPDF/Watermark.php';
+     var json = JSON.stringify([data.f.file,nama,np]);
+     var encrypt = CryptoJS.AES.encrypt(JSON.stringify(json), "rep0ptba", {format: CryptoJSAesJson}).toString();
+     var viewer = '<?=base_url()?>ViewerJS/#../';
+     window.open(viewer+url+'?file='+encodeURIComponent(encrypt), '_blank');
+
+     
+     //$.post(url,{'file':data.f.file,'nama':nama,'np':np});
+      //console.log(data.f.file);
     });
 
     $('#dokumen tbody').on('click','#hapus',function(){
@@ -288,10 +315,18 @@
         console.log(d);
         if(d.status){
           console.log(d.status);
-          $('#namafile').html(data.f.file);
-          $('#alertsuccess').slideDown().delay(2000).slideUp();  
+          $.notify({
+            message: data.f.file+" telah berhasil dihapus!" 
+          },{
+            type: 'success'
+          }); 
+
         }else{
-          $('#alertfail').slideDown().delay(2000).slideUp();
+          $.notify({
+            message: data.f.file+" telah gagal dihapus!" 
+          },{
+            type: 'danger'
+          });          
         }
         
         table.ajax.reload();
@@ -299,7 +334,7 @@
       .fail(function(d){
         table.ajax.reload();
       });
-      console.log("Delete : id: "+data.f.id_file+ ", file : " + data.f.file);
+      //console.log("Delete : id: "+data.f.id_file+ ", file : " + data.f.file);
     });
   });
   

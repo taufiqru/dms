@@ -174,14 +174,15 @@
     margin-right: 12px;
     display: inline;
 }
-.qq-upload-file {
+.qq-upload-file{
     vertical-align: middle;
     display: inline-block;
-    width: 300px;
+    width: 400px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow-x: hidden;
     height: 18px;
+    font-size : 12px;
 }
 .qq-upload-spinner {
     display: inline-block;
@@ -312,9 +313,10 @@ INPUT.qq-edit-filename.qq-editing {
 
 /* Thumbnail
 ------------------------------------------ */
-.qq-thumbnail-selector {
+.qq-thumbnail-selector{
     vertical-align: middle;
     margin-right: 12px;
+    height:30px;
 }
 
 

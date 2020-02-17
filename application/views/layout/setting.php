@@ -73,7 +73,19 @@
       var url = "<?=base_url();?>setting/rmvListLevelAkses";
       $.post(url,{id_level_akses:id}).done(function(data){
         tabel_level_akses();
-      });
+        var obj = JSON.parse(data);
+        $.notify({
+            message: obj.message 
+          },{
+            type: obj.type
+          }); 
+      }).fail(function(xhr,status,error){
+          $.notify({
+            message: error 
+          },{
+            type: 'danger'
+          });
+        });
       
     }  
       
@@ -115,8 +127,21 @@
             level : $("#level").val(),
             keterangan : $("#keterangan").val()
         }).done(function(data){
+          console.log(data);
+          var obj = JSON.parse(data);
+          $.notify({
+            message: obj.message 
+          },{
+            type: obj.type
+          }); 
           tabel_level_akses();
           resetFormLevelAkses();
+        }).fail(function(xhr,status,error){
+          $.notify({
+            message: error 
+          },{
+            type: 'danger'
+          });
         });
 
     });

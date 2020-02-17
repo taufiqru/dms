@@ -157,10 +157,20 @@
     function hpsFolder(val){
       var url = "<?=base_url()?>setting/delFolder";
 
-      $.post(url,{id:val}).done(function(data){
-        tabel_folder();
-        tabel_hak_akses()
-      });
+      $.post(url,{id:val})
+        .done(function(data){
+          var obj = JSON.parse(data);
+          $.notify({message: obj.message},{type: obj.type});
+          tabel_folder();
+          tabel_hak_akses()
+        })
+        .fail(function(xhr,status,error){
+          $.notify({
+            message: error 
+          },{
+            type: 'danger'
+          });
+        });
     }
 
     function resetFormFolder(){
@@ -234,11 +244,21 @@
         var aksiFolder = $("#aksi").val();
         var idFolder = $("#id_folder").val();
         var url = "<?=base_url();?>setting/addfolder";
-        $.post(url,{nama:namaFolder,aksi:aksiFolder,id:idFolder}).done(function(data){
+        $.post(url,{nama:namaFolder,aksi:aksiFolder,id:idFolder})
+        .done(function(data){
+          var obj = JSON.parse(data);
+          $.notify({message: obj.message},{type: obj.type});
           resetFormFolder();
           $("#modal-default").modal('hide');
           tabel_folder();
           tabel_hak_akses()
+        })
+        .fail(function(xhr,status,error){
+          $.notify({
+            message: error 
+          },{
+            type: 'danger'
+          });
         });
       });
 

@@ -19,7 +19,7 @@ class Akun extends CI_Controller{
 		$crud->callback_edit_field('password',array($this,'set_password_empty'));
 		$crud->callback_edit_field('email',array($this,'emailForm'));
 		$crud->callback_add_field('email',function(){
-			return "<input type='email' name='email' class='form-control' required>";
+			return "<input type='email' id='email' name='email' class='form-control' required>";
 		});
 		
 		$crud->set_relation('level_akses_folder','level_akses','level');
@@ -51,7 +51,6 @@ class Akun extends CI_Controller{
 		$this->load->view('base/header');		
 		$this->load->view('base/wrapper-open');
 		$this->load->view('base/nav-header');
-		$level=$this->session->userdata('level');
 		$this->load->view('base/nav-sidebar_admin');
 		$this->load->view('layout/table',$output);		
 		$this->load->view('base/footer');

@@ -1,7 +1,7 @@
 <header class="main-header">
     <a href="#" class="logo">      
-      <span class="logo-mini"><b>BA</b></span>      
-      <span class="logo-lg"><b>PT Bukit Asam Tbk</b></span>
+      <span class="logo-mini"><img src="<?=base_url()?>img/logo-mini.png" alt="BA"></span>      
+      <span class="logo-lg"><img src="<?=base_url()?>img/logo-header.png" alt="PT Bukit Asam Tbk"></span>
     </a>    
     <nav class="navbar navbar-static-top" role="navigation">     
       <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">

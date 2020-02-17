@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
     // For view all the languages go to the folder assets/grocery_crud/languages/
-    $config['grocery_crud_default_language'] = 'english';
+    $config['grocery_crud_default_language'] = 'indonesian';
 
     // There are only three choices: "uk-date" (dd/mm/yyyy), "us-date" (mm/dd/yyyy) or "sql-date" (yyyy-mm-dd)
     $config['grocery_crud_date_format'] = 'uk-date';
@@ -22,7 +22,7 @@
     // All the forms are opening with dialog forms without refreshing the page once again.
     // IMPORTANT: PLease be aware that this functionality is still in BETA phase and it is
     // not suggested to use this in production mode
-    $config['grocery_crud_dialog_forms'] = false;
+    $config['grocery_crud_dialog_forms'] = true;
 
     // Having some options at the list paging. This is the default one that all the websites are using.
     // Make sure that the number of grocery_crud_default_per_page variable is included to this array.

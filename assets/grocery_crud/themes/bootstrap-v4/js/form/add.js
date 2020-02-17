@@ -146,9 +146,9 @@ function clearForm()
 {
     $('#crudForm').find(':input').each(function() {
         switch(this.type) {
-            case 'password':
-            case 'select-multiple':
             case 'select-one':
+            case 'select-multiple':
+            case 'password':         
             case 'text':
             case 'textarea':
                 $(this).val('');
@@ -173,8 +173,11 @@ function clearForm()
     });
 
     $('.chosen-multiple-select, .chosen-select, .ajax-chosen-select').each(function(){
-        $(this).trigger("liszt:updated");
+        $(this).trigger("chosen:updated");
     });
+
+    $('.chosen-select').trigger('chosen:updated');
+    $('#email').val('');
 }
 
 function form_success_message(success_message)

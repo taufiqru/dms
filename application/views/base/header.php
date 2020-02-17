@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">  
   <link rel="stylesheet" href="<?=base_url();?>theme/dist/css/AdminLTE.min.css"> 
   <link rel="stylesheet" href="<?=base_url();?>theme/dist/css/skins/skin-red-light.css"> 
+  <link rel="stylesheet" href="<?=base_url();?>css/animate.css"> 
 
   <!-- REQUIRED JS SCRIPTS -->
 
@@ -23,6 +24,24 @@
   <script src="<?=base_url();?>theme/bootstrap/js/bootstrap.min.js"></script>
   <!-- AdminLTE App -->
   <script src="<?=base_url();?>theme/dist/js/app.js"></script>
+  <script src="<?=base_url();?>js/bootstrap-notify.min.js"></script>
+  <script>
+    $.notifyDefaults({
+      newest_on_top:true,
+      placement: {
+        from: "top",
+        align: "right"
+      },
+      offset : 20,
+      spacing : 10,
+      z_index : 1031,
+      delay : 700,
+      animate:{
+        enter: "animated fadeInDown",
+        exit: "animated fadeOutUp"
+      }
+    });
+  </script>
 
 </head>
 

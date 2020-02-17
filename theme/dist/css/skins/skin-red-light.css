@@ -42,12 +42,12 @@
   }
 }
 .skin-red-light .main-header .logo {
-  background-color: #9e2f01;
+  background-color: #f9fafc;
   color: #ffffff;
   border-bottom: 0 solid transparent;
 }
 .skin-red-light .main-header .logo:hover {
-  background-color: #690d06;
+  background-color: #f4f4f5;
 }
 .skin-red-light .main-header li.user-header {
   background-color: #9e2f01;

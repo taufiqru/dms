@@ -222,14 +222,16 @@ class Dokumen extends CI_Controller{
 		$url = 'uploads/';
 		$result=$uploader->handleUpload($url);
 		//echo $result;
-		if($result['success']){
-			$data=array(
-				'file'=>$_POST['qqfilename'],
-				'folder'=>$this->uri->segment(3),
-				);
-			$query=$this->db->insert('file',$data);
-		}		
+			
 		echo htmlspecialchars(json_encode($result),ENT_NOQUOTES);		
+	}
+
+	function recordUploadedDoc(){
+		$data=array(
+				'file'=>$this->input->post('filename'),
+				'folder'=>$this->input->post('folder'),
+				);
+		$query=$this->db->insert('file',$data);
 	}
 
 	function getfilelist(){

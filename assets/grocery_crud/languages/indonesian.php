@@ -94,12 +94,12 @@
 	$lang['list_search_column'] = 'Search {column_name}';
 
 	/* Added in version 1.5.8 */
-	$lang['alert_delete_multiple'] = 'Are you sure that you want to delete those {items_amount} items?';
+	$lang['alert_delete_multiple'] = 'Apakah anda yakin ingin menghapus sejumlah {items_amount} item ini?';
 
-	$lang['alert_delete_multiple_one'] = 'Are you sure that you want to delete this 1 item?';
+	$lang['alert_delete_multiple_one'] = 'Apakah anda yakin ingin menghapus 1 item ini?';
 
 
 
 	/* Added in version 1.6.1 */
-	$lang['list_clone'] = 'Clone';
+	$lang['list_clone'] = 'Duplikat';
 

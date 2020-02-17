@@ -24,7 +24,7 @@ foreach($css_files as $file): ?>
     <!-- Main content -->
    
     <section class="content" >
-    <div class="box" >
+    <div class="box box-warning" >
       <div class="box-header">
         <!-- <a class="btn bg-red btn-flat" href="<?=$back_button?>" onClick="" >
           <i class="fa fa-chevron-circle-left"></i> Kembali

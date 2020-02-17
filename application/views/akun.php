@@ -24,7 +24,7 @@ foreach($css_files as $file): ?>
     <!-- Main content -->
    
     <section class="content" >
-    <div class="box" >
+    <div class="box box-warning" >
       <div class="box-header"></div>
       <div class="box-body">
         <?php echo $output; ?> 

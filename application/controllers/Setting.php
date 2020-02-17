@@ -31,15 +31,41 @@ class Setting extends CI_Controller{
 					'level' => $this->input->post('level'),
 					'keterangan' => $this->input->post('keterangan')
 				);
-		$this->model_level_akses->addListLevelAkses($data);
-		//echo json_encode($data);
+		$query = $this->model_level_akses->addListLevelAkses($data);
+
+		if($query){
+			$response = array(
+					'message' => 'Data berhasil disimpan !',
+					'type' => 'success'
+				    );
+		}else{
+			$response = array(
+					'message' => 'Data gagal disimpan !',
+					'type' => 'danger'
+				    );
+		}
+
+		
+		echo json_encode($response);
 	}
 
 	function rmvListLevelAkses(){
 		$this->load->model('model_level_akses');
 		$data = $this->input->post('id_level_akses');
 		//echo $data; break;
-		$this->model_level_akses->rmvListLevelAkses($data);
+		$query = $this->model_level_akses->rmvListLevelAkses($data);
+		if($query){
+			$response = array(
+					'message' => 'Data berhasil dihapus !',
+					'type' => 'success'
+				    );
+		}else{
+			$response = array(
+					'message' => 'Data gagal dihapus !',
+					'type' => 'danger'
+				    );
+		}
+		echo json_encode($response);
 	}
 
 	function getFolder(){
@@ -63,19 +89,57 @@ class Setting extends CI_Controller{
 					'position' =>"0",
 					'nama' =>$namaFolder
 				);
-			$this->Model_dokumen->addFolderRoot($val);	
+			$query = $this->Model_dokumen->addFolderRoot($val);	
+
+			if($query){
+				$message = 'Data berhasil disimpan !';
+				$type = 'success';
+			}else{
+				$message = 'Data gagal disimpan !';
+				$type = 'danger';
+			}
+			
+			$response = array(
+						'message' => $message,
+						'type' => $type
+					    );
+			echo json_encode($response);
 		}else{
 			$val = array(
 					'nama' =>$namaFolder
 				);
-			$this->Model_dokumen->editFolderRoot($val,$idFolder);
+			$query = $this->Model_dokumen->editFolderRoot($val,$idFolder);
+			if($query){
+				$message = 'Data berhasil diubah !';
+				$type = 'success';
+			}else{
+				$message = 'Data gagal diubah !';
+				$type = 'danger';
+			}
+			$response = array(
+						'message' => $message,
+						'type' => $type
+					    );
+			echo json_encode($response);
 		}
 	}
 
 	function delFolder(){
 		$id_folder = $this->input->post('id');
 		$this->load->model('Model_dokumen');
-		$this->Model_dokumen->deleteFolderRoot($id_folder);
+		$query = $this->Model_dokumen->deleteFolderRoot($id_folder);
+		if($query){
+			$message = 'Data berhasil dihapus !';
+			$type = 'success';
+		}else{
+			$message = 'Data gagal dihapus !';
+			$type = 'danger';
+		}
+		$response = array(
+					'message' => $message,
+					'type' => $type
+				    );
+		echo json_encode($response);
 	}
 
 	function invokeAccess(){

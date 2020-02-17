@@ -16,7 +16,6 @@ class WatermarkPDF extends FPDI {
             $this->rotatedText = $rotate_text;
             $this->user = $user;
         }
-            
         parent::__construct();
     }
 
@@ -49,14 +48,7 @@ class WatermarkPDF extends FPDI {
     function Header() {
         //Put the watermark
         //$this->Image('http://chart.googleapis.com/chart?cht=p3&chd=t:60,40&chs=250x100&chl=Hello|World', 40, 100, 100, 0, 'PNG');
-        $this->SetFont('Arial', 'B', 50);
-        $this->SetTextColor(159, 4, 4);
-        $this->RotatedText(40, 180, $this->rotatedText, 45);
-
-        $this->SetFont('Arial', 'B', 20);
-        $this->SetTextColor(159, 4, 4);
-        $this->RotatedText(70, 160, $this->user, 45);
-
+        
         //$this->RotatedText(60, 180, $this->rotatedText, 45);
         if ($this->fullPathToFile) {
             if (is_null($this->_tplIdx)) {
@@ -67,7 +59,15 @@ class WatermarkPDF extends FPDI {
             $this->useTemplate($this->_tplIdx, 0, 0, 200);
         }
 
-        
+        $this->SetAlpha(.5);
+        $this->SetFont('Arial', 'B', 50);
+        $this->SetTextColor(159, 4, 4, .6);
+        $this->RotatedText(50, 180, $this->rotatedText, 45);
+
+        $this->SetAlpha(.5);
+        $this->SetFont('Arial', 'B', 20);
+        $this->SetTextColor(159, 4, 4, .6);
+        $this->RotatedText(80, 160, $this->user, 45);
     }
 
     function RotatedText($x, $y, $txt, $angle) {
@@ -76,5 +76,70 @@ class WatermarkPDF extends FPDI {
         $this->Text($x, $y, $txt);
         $this->Rotate(0);
     }
+
+    var $extgstates = array();
+
+    // alpha: real value from 0 (transparent) to 1 (opaque)
+    // bm:    blend mode, one of the following:
+    //          Normal, Multiply, Screen, Overlay, Darken, Lighten, ColorDodge, ColorBurn,
+    //          HardLight, SoftLight, Difference, Exclusion, Hue, Saturation, Color, Luminosity
+    function SetAlpha($alpha, $bm='Normal')
+    {
+        // set alpha for stroking (CA) and non-stroking (ca) operations
+        $gs = $this->AddExtGState(array('ca'=>$alpha, 'CA'=>$alpha, 'BM'=>'/'.$bm));
+        $this->SetExtGState($gs);
+    }
+
+    function AddExtGState($parms)
+    {
+        $n = count($this->extgstates)+1;
+        $this->extgstates[$n]['parms'] = $parms;
+        return $n;
+    }
+
+    function SetExtGState($gs)
+    {
+        $this->_out(sprintf('/GS%d gs', $gs));
+    }
+
+    function _enddoc()
+    {
+        if(!empty($this->extgstates) && $this->PDFVersion<'1.4')
+            $this->PDFVersion='1.4';
+        parent::_enddoc();
+    }
+
+    function _putextgstates()
+    {
+        for ($i = 1; $i <= count($this->extgstates); $i++)
+        {
+            $this->_newobj();
+            $this->extgstates[$i]['n'] = $this->n;
+            $this->_out('<</Type /ExtGState');
+            $parms = $this->extgstates[$i]['parms'];
+            $this->_out(sprintf('/ca %.3F', $parms['ca']));
+            $this->_out(sprintf('/CA %.3F', $parms['CA']));
+            $this->_out('/BM '.$parms['BM']);
+            $this->_out('>>');
+            $this->_out('endobj');
+        }
+    }
+
+    function _putresourcedict()
+    {
+        parent::_putresourcedict();
+        $this->_out('/ExtGState <<');
+        foreach($this->extgstates as $k=>$extgstate)
+            $this->_out('/GS'.$k.' '.$extgstate['n'].' 0 R');
+        $this->_out('>>');
+    }
+
+    function _putresources()
+    {
+        $this->_putextgstates();
+        parent::_putresources();
+    }
+
+   
 
 }
