@@ -55,5 +55,18 @@ Class Model_dokumen extends CI_Model{
 		$this->db->order_by('nama','ASC');
 		return $this->db->get('folder')->result();
 	}
+
+	function counterRead($idfile){
+		$this->db->where('id_file',$idfile);
+		$this->db->select('dibaca');
+		$counter = $this->db->get('file')->result_array();
+		print($idfile);
+		print_r($counter);
+		$sum = $counter[0]['dibaca']+1;
+
+		$this->db->set('dibaca',$sum);
+		$this->db->where('id_file',$idfile);
+		return $this->db->update('file');
+	}
 }
 ?>

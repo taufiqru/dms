@@ -234,6 +234,13 @@ class Dokumen extends CI_Controller{
 		$query=$this->db->insert('file',$data);
 	}
 
+	function readCounter(){
+		$id = $_GET['idfile'];
+		$this->load->model('Model_dokumen');
+		$this->Model_dokumen->counterRead($id);
+
+	}
+
 	function getfilelist(){
 		//Important to NOT load the model and let the library load it instead.  
 		$this -> load -> library('Datatable', array('model' => 'model_file', 'rowIdCol' => 'f.id_file'));

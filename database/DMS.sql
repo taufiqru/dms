@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Feb 13, 2020 at 09:17 AM
+-- Generation Time: Feb 24, 2020 at 03:36 AM
 -- Server version: 10.1.25-MariaDB
 -- PHP Version: 5.6.31
 
@@ -58,8 +58,18 @@ INSERT INTO `akun` (`no_pegawai`, `nama`, `email`, `username`, `password`, `stat
 CREATE TABLE `file` (
   `id_file` int(11) NOT NULL,
   `file` varchar(255) NOT NULL,
+  `dibaca` int(11) NOT NULL,
   `folder` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `file`
+--
+
+INSERT INTO `file` (`id_file`, `file`, `dibaca`, `folder`) VALUES
+(1, 'BPS_286_2004.pdf', 3, 1),
+(2, 'AK max calon PK.pdf', 5, 1),
+(3, '15-PETUNJUK TEKNIS ORGANISASI DAN TATA KERJA.pdf', 7, 11);
 
 -- --------------------------------------------------------
 
@@ -183,7 +193,7 @@ ALTER TABLE `level_akses`
 -- AUTO_INCREMENT for table `file`
 --
 ALTER TABLE `file`
-  MODIFY `id_file` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=165;
+  MODIFY `id_file` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `folder`
 --
@@ -198,7 +208,7 @@ ALTER TABLE `hak_akses`
 -- AUTO_INCREMENT for table `level_akses`
 --
 ALTER TABLE `level_akses`
-  MODIFY `id_level` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id_level` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- Constraints for dumped tables
 --

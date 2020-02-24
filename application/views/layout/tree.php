@@ -46,6 +46,7 @@
                   <th>Id</th>
                   <th>File</th>
                   <th>Folder</th>
+                  <th>Dibaca</th>
                   <th style="width:150px">Aksi</th>                                  
                 </tr>
               </thead>
@@ -54,6 +55,7 @@
                   <th>Id</th>
                   <th>File</th>
                   <th>Folder</th>
+                  <th>Dibaca</th>
                   <th>Aksi</th>                                     
                 </tr>
               </tfoot>
@@ -214,129 +216,130 @@
         })
     });
     
-    <?php if($this->session->userdata('level')!="Admin"){ ?>
-      $('#ajax').off("contextmenu.jstree", ".jstree-anchor");
-    <?php }?>
+  <?php if($this->session->userdata('level')!="Admin"){ ?>
+    $('#ajax').off("contextmenu.jstree", ".jstree-anchor");
+  <?php }?>
 
-    $("#tambahFile").on('click',function(){
-      var uploader_dialog= $("<div></div>")
-      .html('<iframe style="border: 0px; " src="<?=base_url()?>index.php/dokumen/uploaderView?id='+getActive_id()+'" width="100%" height="90%"></iframe>')
-      .dialog({
-        autoOpen:false,
-        title: "Upload Dokumen : " +getActive_node() ,
-        modal:true,
-        width:800,
-        height:600,
-        show:{
-          effect:"fade",
-          duration:500
-        },
-        hide:{
-          effect:"fade",
-          duration:500
-        },
-        create: function(event, ui) {
-          $("#tambahFile").parent('.ui-dialog').css('zIndex', 0);
-        },
-        open: function (event, ui) {
-          $("#tambahFile").css('overflow-y', 'hidden'); 
-        },
-        buttons: {
-          Tutup: function() {
-            table.ajax.url( '<?=base_url()?>index.php/dokumen/getFileList/'+ getActive_id() ).load();
-            $( this ).dialog( "close" );
-          }}
-      }); 
-      uploader_dialog.dialog('open').fadeIn();
+  $("#tambahFile").on('click',function(){
+    var uploader_dialog= $("<div></div>")
+    .html('<iframe style="border: 0px; " src="<?=base_url()?>index.php/dokumen/uploaderView?id='+getActive_id()+'" width="100%" height="90%"></iframe>')
+    .dialog({
+      autoOpen:false,
+      title: "Upload Dokumen : " +getActive_node() ,
+      modal:true,
+      width:800,
+      height:600,
+      show:{
+        effect:"fade",
+        duration:500
+      },
+      hide:{
+        effect:"fade",
+        duration:500
+      },
+      create: function(event, ui) {
+        $("#tambahFile").parent('.ui-dialog').css('zIndex', 0);
+      },
+      open: function (event, ui) {
+        $("#tambahFile").css('overflow-y', 'hidden'); 
+      },
+      buttons: {
+        Tutup: function() {
+          table.ajax.url( '<?=base_url()?>index.php/dokumen/getFileList/'+ getActive_id() ).load();
+          $( this ).dialog( "close" );
+        }}
     }); 
+    uploader_dialog.dialog('open').fadeIn();
+  }); 
 
-    var table=$('#dokumen').DataTable( {
-          "processing":true,
-          "serverSide":true,
-          "ajax":{
-            "url":"<?=base_url()?>index.php/dokumen/getFileList/"+getActive_id(),
-            "type":"POST"
+  var table=$('#dokumen').DataTable( {
+        "processing":true,
+        "serverSide":true,
+        "ajax":{
+          "url":"<?=base_url()?>index.php/dokumen/getFileList/"+getActive_id(),
+          "type":"POST"
+        },
+        "columns":[
+          {
+            data:"f.id_file",
+            visible:false,
+            searchable:false
           },
-          "columns":[
-            {
-              data:"f.id_file",
-              visible:false,
-              searchable:false
-            },
-            {data:"f.file"},  
-            {
-              data:"f.folder",
-              visible:false,
-              searchable:false
-            },          
-            {
-             "data": null,
-             "searchable": false,
-             "render": function(data,type,row){
-                var admin = "<button id='lihat' class='btn bg-teal '>Lihat</button> <button id='hapus' class='btn bg-red'>Hapus</button>";
-                var user = "<button id='lihat' class='btn bg-teal '>Lihat</button>";
-                <?php if($this->session->userdata('level')=='Admin'){ ?>
-                  return admin;
-                <?php }else{?>  
-                  return user;
-                <?php }?>  
-             }
+          {data:"f.file"},
 
-             // "defaultContent": "<button id='download' class='btn bg-teal '>Download</button> <button id='hapus' class='btn bg-red'>Hapus</button>"
-            }
-          ] 
-    } ); 
+          {
+            data:"f.folder",
+            visible:false,
+            searchable:false
+          }, 
+          {data:"f.dibaca"},         
+          {
+           "data": null,
+           "searchable": false,
+           "render": function(data,type,row){
+              var admin = "<button id='lihat' class='btn bg-teal '>Lihat</button> <button id='hapus' class='btn bg-red'>Hapus</button>";
+              var user = "<button id='lihat' class='btn bg-teal '>Lihat</button>";
+              <?php if($this->session->userdata('level')=='Admin'){ ?>
+                return admin;
+              <?php }else{?>  
+                return user;
+              <?php }?>  
+           }
 
-    $('#dokumen tbody').on('click','#lihat',function(){
-      var data=table.row($(this).parents('tr')).data();
-     // window.open('<?=base_url()?>uploads/'+data.f.file, '_blank');
-     // var url = '<?=base_url()?>dokumen/setwatermark';
-     // $.get(url,{'file':data.f.file}).done(function(data){
+           // "defaultContent": "<button id='download' class='btn bg-teal '>Download</button> <button id='hapus' class='btn bg-red'>Hapus</button>"
+          }
+        ] 
+  } ); 
 
-     // });
-     var nama = "<?=$this->session->userdata('nama')?>";
-     var np = "<?=$this->session->userdata('no_pegawai')?>";
-     var url = 'WatermarkPDF/Watermark.php';
-     var json = JSON.stringify([data.f.file,nama,np]);
-     var encrypt = CryptoJS.AES.encrypt(JSON.stringify(json), "rep0ptba", {format: CryptoJSAesJson}).toString();
-     var viewer = '<?=base_url()?>ViewerJS/#../';
-     window.open(viewer+url+'?file='+encodeURIComponent(encrypt), '_blank');
+  $('#dokumen tbody').on('click','#lihat',function(){
+   var data=table.row($(this).parents('tr')).data();
+   
+   var urlupdate = "<?=base_url();?>dokumen/readcounter";
+   $.get(urlupdate,{'idfile':data.f.id_file}).done(function(){
+      table.ajax.url( '<?=base_url()?>index.php/dokumen/getFileList/'+ getActive_id() ).load(); 
+   });
 
-     
-     //$.post(url,{'file':data.f.file,'nama':nama,'np':np});
-      //console.log(data.f.file);
-    });
-
-    $('#dokumen tbody').on('click','#hapus',function(){
-      var data=table.row($(this).parents('tr')).data();
-      $url="<?=base_url()?>index.php/dokumen/deletefile";
-      $.get($url,{'id':data.f.id_file,'file':data.f.file})
-      .done(function(d){
-        console.log(d);
-        if(d.status){
-          console.log(d.status);
-          $.notify({
-            message: data.f.file+" telah berhasil dihapus!" 
-          },{
-            type: 'success'
-          }); 
-
-        }else{
-          $.notify({
-            message: data.f.file+" telah gagal dihapus!" 
-          },{
-            type: 'danger'
-          });          
-        }
-        
-        table.ajax.reload();
-      })
-      .fail(function(d){
-        table.ajax.reload();
-      });
-      //console.log("Delete : id: "+data.f.id_file+ ", file : " + data.f.file);
-    });
+   var nama = "<?=$this->session->userdata('nama')?>";
+   var np = "<?=$this->session->userdata('no_pegawai')?>";
+   var url = 'WatermarkPDF/Watermark.php';
+   var json = JSON.stringify([data.f.file,nama,np]);
+   var encrypt = CryptoJS.AES.encrypt(JSON.stringify(json), "rep0ptba", {format: CryptoJSAesJson}).toString();
+   var viewer = '<?=base_url()?>ViewerJS/#../';
+   window.open(viewer+url+'?file='+encodeURIComponent(encrypt), '_blank');
+   //$.post(url,{'file':data.f.file,'nama':nama,'np':np});
+    //console.log(data.f.file);
   });
+
+  $('#dokumen tbody').on('click','#hapus',function(){
+    var data=table.row($(this).parents('tr')).data();
+    $url="<?=base_url()?>index.php/dokumen/deletefile";
+    $.get($url,{'id':data.f.id_file,'file':data.f.file})
+    .done(function(d){
+      console.log(d);
+      if(d.status){
+        console.log(d.status);
+        $.notify({
+          message: data.f.file+" telah berhasil dihapus!" 
+        },{
+          type: 'success'
+        }); 
+
+      }else{
+        $.notify({
+          message: data.f.file+" telah gagal dihapus!" 
+        },{
+          type: 'danger'
+        });          
+      }
+      
+      table.ajax.reload();
+    })
+    .fail(function(d){
+      table.ajax.reload();
+    });
+    //console.log("Delete : id: "+data.f.id_file+ ", file : " + data.f.file);
+  });
+});
   
 </script>
 
